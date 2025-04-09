@@ -1,0 +1,22 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '8.x'
+
+  - script: dotnet build Quiz4App/Quiz4App.csproj --configuration Release
+    displayName: 'Build .NET App'
+
+  - script: dotnet publish Quiz4App/Quiz4App.csproj -c Release -o $(Build.ArtifactStagingDirectory)
+    displayName: 'Publish App'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
